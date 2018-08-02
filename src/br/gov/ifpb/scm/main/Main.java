@@ -21,6 +21,7 @@ public class Main {
 		
 		OperatorLeaderThread operatoLeaderCreator = new OperatorLeaderThread();
 		Thread operatoLeaderCreatorThread = new Thread(operatoLeaderCreator);
+		
 		operatoLeaderCreatorThread.start();
 		
 		List<Sector> listSectors;

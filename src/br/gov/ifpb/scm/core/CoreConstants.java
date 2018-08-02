@@ -26,8 +26,8 @@ public class CoreConstants {
 	public final static int PROCEEDINGS_STAGE_INIT = 1;
 	
 	
-	public final static int PROCEEDINGS_SLEEP_MS_BETWEEN_STARTED_DISPATCHED_MIN = 4500;
-	public final static int PROCEEDINGS_SLEEP_MS_BETWEEN_STARTED_DISPATCHED_MAX = 6000;
+	public final static int PROCEEDINGS_SLEEP_MS_TASK_MIN = 4500;
+	public final static int PROCEEDINGS_SLEEP_MS_TASK_MAX = 6000;
 	
 	
 	public final static int PROCEEDINGS_SLEEP_MS_BETWEEN_DISPATCHED_ARRIVED_MIN = 2500;

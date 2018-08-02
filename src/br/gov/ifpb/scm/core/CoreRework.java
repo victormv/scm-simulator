@@ -38,6 +38,6 @@ public class CoreRework {
 			OrderServiceProduct orderServiceProduct, DAO dao) {
 		
 		dao.updateProductionLineStatus(productionLine.getId(), CoreConstants.PRODUCTION_LINE_STATUS_DISCARDED);
-		CoreProductionLine.createNewProductionLine(productionLine, orderServiceProduct, dao);
+		CoreProductionLine.createNewProductionLineAndPersistFirstProceeding(orderServiceProduct, dao);
 	}
 }
