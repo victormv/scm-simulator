@@ -9,14 +9,13 @@ import br.gov.ifpb.scm.dao.DAO;
 import br.gov.ifpb.scm.model.Sector;
 import hibernate.util.JpaUtil;
 
-public class Main 
-{
-	public static void main(String[] args)
-	{
+public class Main {
+	
+	public static void main(String[] args) {
+		
 		DAO dao = new DAO(JpaUtil.createEntityManager());
 		
-		if(CoreConstants.DB_WIPE)
-		{
+		if(CoreConstants.DB_WIPE) {
 			dao.wipeDB();
 		}
 		
@@ -25,19 +24,15 @@ public class Main
 		operatoLeaderCreatorThread.start();
 		
 		List<Sector> listSectors;
-		if(CoreConstants.AREA_SPECIFIC)
-		{
+		if(CoreConstants.AREA_SPECIFIC) {
 			listSectors = dao.getSectors(CoreConstants.AREA_SPECIFIC_ID);
-		}
-		else
-		{
+		} else {
 			listSectors = dao.getSectors(null);
 		}
 		
 		OperatorSectorThread operatorSector;
 		Thread operatorSectorThread;
-		for(Sector sector : listSectors)
-		{
+		for(Sector sector : listSectors) {
 			operatorSector = new OperatorSectorThread(sector);
 			operatorSectorThread = new Thread(operatorSector);
 			operatorSectorThread.start();

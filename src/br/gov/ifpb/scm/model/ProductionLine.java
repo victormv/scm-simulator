@@ -16,8 +16,8 @@ import javax.persistence.TemporalType;
 @Entity
 @Table(name="production_lines", schema="dashboard")
 @SequenceGenerator(sequenceName="dashboard.seq_production_lines", name = "seq")
-public class ProductionLine	
-{
+public class ProductionLine	{
+	
 	private Long id;
 	private Long idOrderServiceProduct;
 	private Date momentStarted;

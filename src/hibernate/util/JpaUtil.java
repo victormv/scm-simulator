@@ -11,8 +11,7 @@ import javax.persistence.Persistence;
  *
  */
 
-public class JpaUtil 
-{
+public class JpaUtil {
 	/**
 	 * Atributo que será associado a propriedade 'persistence-unit',
 	 * encontrada no arquivo persistence.xml, e utilizado sobre o
@@ -35,14 +34,10 @@ public class JpaUtil
      * arquivo persistence.xml do projeto. Será instânciado
      * uma fábrica de EntityManager.
      */
-    static 
-    {
-        try 
-        {
+    static {
+        try {
             emf = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
-        } 
-        catch (Throwable ex) 
-        {
+        } catch (Throwable ex) {
         	ex.printStackTrace();
         }
     }
@@ -54,10 +49,8 @@ public class JpaUtil
      * a camada de persistência.
      * @return 
      */
-    public static EntityManager createEntityManager() 
-    {
-    	if (!emf.isOpen())
-    	{
+    public static EntityManager createEntityManager() {
+    	if (!emf.isOpen()) {
     		throw new RuntimeException("EntityManagerFactory is closed");
     	}
     	return emf.createEntityManager();
@@ -69,10 +62,8 @@ public class JpaUtil
      * de instância de um EntityManager para acesso a 
      * camada de persistência.
      */
-    public static void closeEntityManagerFactory() 
-    {
-    	if (emf.isOpen()) 
-    	{
+    public static void closeEntityManagerFactory() {
+    	if (emf.isOpen()) {
     		emf.close();
     	}
 	}

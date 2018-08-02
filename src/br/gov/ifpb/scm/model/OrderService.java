@@ -16,12 +16,10 @@ import javax.persistence.TemporalType;
 @Entity
 @Table(name="orders_service", schema="dashboard")
 @SequenceGenerator(sequenceName="dashboard.seq_orders_service", name = "seq")
-public class OrderService	
-{
+public class OrderService {
+	
 	private Long id;
 	private Integer idCustomer;
-	private Date dateStarted;
-	private Date dateEnded;
 	private Date dateEstimated;
 	private Integer idUserCreated;
 	private Integer idUserChanged;
@@ -50,26 +48,6 @@ public class OrderService
 
 	public void setIdCustomer(Integer idCustomer) {
 		this.idCustomer = idCustomer;
-	}
-
-	@Temporal(TemporalType.DATE)
-	@Column(name="date_started")
-	public Date getDateStarted() {
-		return dateStarted;
-	}
-
-	public void setDateStarted(Date dateStarted) {
-		this.dateStarted = dateStarted;
-	}
-
-	@Temporal(TemporalType.DATE)
-	@Column(name="date_ended")
-	public Date getDateEnded() {
-		return dateEnded;
-	}
-
-	public void setDateEnded(Date dateEnded) {
-		this.dateEnded = dateEnded;
 	}
 
 	@Temporal(TemporalType.DATE)

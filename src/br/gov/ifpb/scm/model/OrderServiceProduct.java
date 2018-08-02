@@ -12,8 +12,8 @@ import javax.persistence.Table;
 @Entity
 @Table(name="orders_service_products", schema="dashboard")
 @SequenceGenerator(sequenceName="dashboard.seq_orders_service_products", name = "seq")
-public class OrderServiceProduct	
-{
+public class OrderServiceProduct {
+	
 	private Long id;
 	private Long idOrderService;
 	private Long idProduct;

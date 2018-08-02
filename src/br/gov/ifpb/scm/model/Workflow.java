@@ -12,8 +12,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name="workflows", schema="dashboard")
 @SequenceGenerator(sequenceName="dashboard.seq_workflows", name = "seq")
-public class Workflow	
-{
+public class Workflow {
 	private Long id;
 	private Long idProduct;
 	private Integer stage;

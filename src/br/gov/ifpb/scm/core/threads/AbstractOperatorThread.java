@@ -3,17 +3,15 @@ package br.gov.ifpb.scm.core.threads;
 import br.gov.ifpb.scm.dao.DAO;
 import hibernate.util.JpaUtil;
 
-public abstract class AbstractOperatorThread implements Runnable 
-{
+public abstract class AbstractOperatorThread implements Runnable {
+	
 	protected DAO dao;
 	
-	public AbstractOperatorThread()
-	{
+	public AbstractOperatorThread() {
 		this.dao = new DAO(JpaUtil.createEntityManager());
 	}
 	
-	public void out(String msg)
-	{
+	public void out(String msg) {
 		System.out.println("[" + this.getClass().getSimpleName() + "] " + msg);
 	}
 

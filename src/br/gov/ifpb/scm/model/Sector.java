@@ -16,8 +16,8 @@ import javax.persistence.TemporalType;
 @Entity
 @Table(name="sectors", schema="dashboard")
 @SequenceGenerator(sequenceName="dashboard.seq_sectors", name = "seq")
-public class Sector	
-{
+public class Sector	{
+	
 	private Integer id;
 	private String name;
 	private String acronym;
@@ -28,7 +28,6 @@ public class Sector
 	private Date momentCreated;
 	private Date momentChanged;
 	private Integer idArea;
-	private boolean rework;
 	
 	public Sector() {}
 
@@ -124,14 +123,5 @@ public class Sector
 
 	public void setIdArea(Integer idArea) {
 		this.idArea = idArea;
-	}
-
-	@Column(name="rework")
-	public boolean isRework() {
-		return rework;
-	}
-
-	public void setRework(boolean rework) {
-		this.rework = rework;
 	}
 }

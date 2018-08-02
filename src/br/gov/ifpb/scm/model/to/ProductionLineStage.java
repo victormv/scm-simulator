@@ -10,8 +10,8 @@ import javax.persistence.TemporalType;
 
 
 @Entity
-public class ProductionLineStage
-{
+public class ProductionLineStage {
+	
 	private Long id;
 	private Long idOrderServiceProduct;
 	private Date momentStarted;
