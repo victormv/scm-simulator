@@ -21,12 +21,7 @@ public class OperatorLeaderThread extends AbstractOperatorThread {
 		
 		List<Long> listIdProductUsed = new ArrayList<>();
 		
-		Long idProduct = CoreConstants.PRODUCT_ID;
-		int limitOSP = 1;
-		if(!CoreConstants.PRODUCT_SPECIFIC) {
-			idProduct = this.dao.getIdProductRandom(listIdProductUsed);
-			limitOSP = Util.getRandom(CoreConstants.ORDER_SERVICES_OSP_MIN, CoreConstants.ORDER_SERVICES_OSP_MAX);
-		}
+		int limitOSP = Util.getRandom(CoreConstants.ORDER_SERVICES_OSP_MIN, CoreConstants.ORDER_SERVICES_OSP_MAX);
 		
 		// Create O.S. 
 		for(int i = 0; i < CoreConstants.ORDER_SERVICES_LIMIT; i++) {
@@ -38,7 +33,7 @@ public class OperatorLeaderThread extends AbstractOperatorThread {
 			// Create O.S.P
 			for(int j = 0; j < limitOSP; j++) {
 				osp = this.dao.persistOrderServiceProduct(os, Util.getRandom(CoreConstants.ORDER_SERVICES_PRODUCT_MIN, CoreConstants.ORDER_SERVICES_PRODUCT_MAX), 
-					CoreConstants.AREA_SPECIFIC_ID, idProduct);
+					CoreConstants.AREA_SPECIFIC_ID, this.dao.getIdProductRandom(listIdProductUsed));
 				
 				listIdProductUsed.add(osp.getIdProduct());
 				
