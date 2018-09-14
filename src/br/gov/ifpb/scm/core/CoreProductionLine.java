@@ -15,7 +15,7 @@ public class CoreProductionLine {
 
 		Workflow wf = CoreWorkflow.getInstance().getFirstWorkflowByProductAndArea(CoreConstants.AREA_SPECIFIC_ID, orderServiceProduct.getIdProduct());
 		if(wf != null && wf.getId() != null) {
-			dao.persistProceeding(productionLine.getId(), wf.getIdSectorDestination(), wf.getIdSectorOrigin(), CoreConstants.PROCEEDINGS_STAGE_INIT, null);
+			dao.persistProceeding(productionLine.getId(), wf.getIdSectorDestination(), wf.getIdSectorOrigin(), CoreConstants.PROCEEDINGS_STAGE_INIT, null, 'I');
 		}
 	}
 

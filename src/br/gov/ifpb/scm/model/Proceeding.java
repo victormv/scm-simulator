@@ -26,6 +26,7 @@ public class Proceeding	{
 	private Integer idUser;
 	private Integer idSectorFailure;
 	private Integer stage;
+	private Character type;
 	
 	public Proceeding() {}
 
@@ -112,5 +113,14 @@ public class Proceeding	{
 
 	public void setStage(Integer stage) {
 		this.stage = stage;
+	}
+
+	@Column(name="type")
+	public Character getType() {
+		return type;
+	}
+
+	public void setType(Character type) {
+		this.type = type;
 	}
 }

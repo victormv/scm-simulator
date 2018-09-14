@@ -13,6 +13,7 @@ import br.gov.ifpb.scm.model.ProductionLine;
 import br.gov.ifpb.scm.model.Sector;
 import br.gov.ifpb.scm.model.Workflow;
 import br.gov.ifpb.scm.model.to.ProductionLineStage;
+import br.gov.ifpb.scm.util.SequentialIncrement;
 
 public class DAO {
 	
@@ -128,17 +129,6 @@ public class DAO {
 		}
 	}
 
-	public int updateProductQualityFromProductionLine(Long idProductionLine, Integer idProductQuality) {
-		String sql = "update dashboard.production_lines " +
-				"set id_product_quality = " + idProductQuality + " " +
-				"where id = " + idProductionLine;
-
-		this.em.getTransaction().begin();
-		int res = this.em.createNativeQuery(sql).executeUpdate();
-		this.em.getTransaction().commit();
-		return res;
-	}
-
 	public int updateSectorFailureFromProceeding(int idSectorFailure, long idProceeding, int idSectorRework) {
 		String sql = "update dashboard.proceedings " +
 				"set id_sector_failure = " + idSectorFailure + " " +
@@ -151,7 +141,7 @@ public class DAO {
 		return res;
 	}
 
-	public Proceeding persistProceeding(Long idProductionLine, Integer idSectorDestination, Integer idSectorOrigin, Integer stage, Integer idSectorFailure) {
+	public Proceeding persistProceeding(Long idProductionLine, Integer idSectorDestination, Integer idSectorOrigin, Integer stage, Integer idSectorFailure, Character type) {
 		this.em.getTransaction().begin();
 
 		Proceeding proc = new Proceeding();
@@ -160,6 +150,7 @@ public class DAO {
 		proc.setIdSectorFailure(idSectorFailure);
 		proc.setIdSectorOrigin(idSectorOrigin);
 		proc.setStage(stage);
+		proc.setType(type);
 
 		this.em.persist(proc);
 		this.em.getTransaction().commit();
@@ -168,10 +159,9 @@ public class DAO {
 	}
 
 	@SuppressWarnings("unchecked")
-	public Workflow getFirstWorkflowByProductAndArea(Integer idArea, Long idProduct) {
+	public Workflow getFirstWorkflowByProductAndArea(Integer idArea) {
 		String sql = "select * from dashboard.workflows " +
 				"where id_area = " + idArea + " " +
-				"and id_product = " + idProduct + " " +
 				"and id_sector_origin is null " +
 				"order by stage asc " +
 				"limit 1";
@@ -185,10 +175,9 @@ public class DAO {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public Workflow getWorkflow(Long idProduct, Integer idSector, int stage, Integer idArea) {
+	public Workflow getWorkflow(Integer idSector, int stage, Integer idArea) {
 		String sql = "select * from dashboard.workflows " +
 				"where id_area = " + idArea + " " +
-				"and id_product = " + idProduct + " " +
 				"and id_sector_origin = " + idSector + " " +
 				"and stage = " + stage + " " +
 				"limit 1";
@@ -301,9 +290,9 @@ public class DAO {
 
 		pl.setIdOrderServiceProduct(idOrderServiceProduct);
 		pl.setIdProductionLineStatus(idProductionLineStatus);
-		pl.setIdProductQuality(null);
 		pl.setMomentStarted(null);
 		pl.setMomentEnded(null);
+		pl.setSequential(SequentialIncrement.getInstance().getSequential());
 
 		this.em.persist(pl);
 		this.em.getTransaction().commit();
@@ -368,15 +357,6 @@ public class DAO {
 
 		for(BigInteger obj : list) {
 			return obj.longValue();
-		}
-		return 0;
-	}
-
-	@SuppressWarnings("unchecked")
-	public int getIdProductQualityRandom() {
-		List<Integer> list = (List<Integer>) this.em.createNativeQuery("select id from dashboard.products_qualities order by random();").getResultList();
-		for(Integer obj : list) {
-			return obj.intValue();
 		}
 		return 0;
 	}

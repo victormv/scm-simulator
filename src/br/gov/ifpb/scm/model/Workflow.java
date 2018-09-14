@@ -13,8 +13,8 @@ import javax.persistence.Table;
 @Table(name="workflows", schema="dashboard")
 @SequenceGenerator(sequenceName="dashboard.seq_workflows", name = "seq")
 public class Workflow {
+	
 	private Long id;
-	private Long idProduct;
 	private Integer stage;
 	private Integer idSectorOrigin;
 	private Integer idSectorDestination;
@@ -32,15 +32,6 @@ public class Workflow {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	@Column(name="id_product", updatable=false)
-	public Long getIdProduct() {
-		return idProduct;
-	}
-
-	public void setIdProduct(Long idProduct) {
-		this.idProduct = idProduct;
 	}
 
 	@Column(name="stage", updatable=false)

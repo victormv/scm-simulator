@@ -41,9 +41,6 @@ public class CoreProceeding {
 		proceeding.setMomentEnded(dateNow);
 		proceeding = dao.updateEntity(proceeding);
 
-		int randomProductQuality = dao.getIdProductQualityRandom();
-		dao.updateProductQualityFromProductionLine(proceeding.getIdProductionLine(), randomProductQuality);
-
 		Thread.sleep(Util.getRandom(CoreConstants.PROCEEDINGS_SLEEP_MS_BETWEEN_DISPATCHED_ARRIVED_MIN, CoreConstants.PROCEEDINGS_SLEEP_MS_BETWEEN_DISPATCHED_ARRIVED_MAX));
 
 		CoreProceeding.prepareNextProceeding(proceeding, productionLine, orderServiceProduct, dateNow, dao);
@@ -51,11 +48,11 @@ public class CoreProceeding {
 
 	public static void prepareNextProceeding(Proceeding proceeding, ProductionLine productionLine, OrderServiceProduct orderServiceProduct, Date dateNow, DAO dao) {
 
-		Workflow wf = CoreWorkflow.getInstance().getNextWorkflow(orderServiceProduct.getIdProduct(), proceeding.getIdSectorDestination(), proceeding.getStage(), CoreConstants.AREA_SPECIFIC_ID);
+		Workflow wf = CoreWorkflow.getInstance().getNextWorkflow(proceeding.getIdSectorDestination(), proceeding.getStage(), CoreConstants.AREA_SPECIFIC_ID);
 		if(wf == null) {
 			CoreProductionLine.endProductionLine(productionLine, orderServiceProduct, dateNow, dao);
 		} else {
-			dao.persistProceeding(productionLine.getId(), wf.getIdSectorDestination(), wf.getIdSectorOrigin(), wf.getStage(), null);
+			dao.persistProceeding(productionLine.getId(), wf.getIdSectorDestination(), wf.getIdSectorOrigin(), wf.getStage(), null, 'O');
 		}
 	}
 }

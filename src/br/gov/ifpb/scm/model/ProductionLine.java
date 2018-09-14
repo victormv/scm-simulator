@@ -22,8 +22,8 @@ public class ProductionLine	{
 	private Long idOrderServiceProduct;
 	private Date momentStarted;
 	private Date momentEnded;
-	private Integer idProductQuality;
 	private Integer idProductionLineStatus;
+	private Long sequential;
 	
 	public ProductionLine() {}
 
@@ -67,15 +67,6 @@ public class ProductionLine	{
 		this.momentEnded = momentEnded;
 	}
 
-	@Column(name="id_product_quality")
-	public Integer getIdProductQuality() {
-		return idProductQuality;
-	}
-
-	public void setIdProductQuality(Integer idProductQuality) {
-		this.idProductQuality = idProductQuality;
-	}
-
 	@Column(name="id_production_line_status")
 	public Integer getIdProductionLineStatus() {
 		return idProductionLineStatus;
@@ -83,5 +74,14 @@ public class ProductionLine	{
 
 	public void setIdProductionLineStatus(Integer idProductionLineStatus) {
 		this.idProductionLineStatus = idProductionLineStatus;
+	}
+
+	@Column(name="sequential")
+	public Long getSequential() {
+		return sequential;
+	}
+
+	public void setSequential(Long sequential) {
+		this.sequential = sequential;
 	}
 }

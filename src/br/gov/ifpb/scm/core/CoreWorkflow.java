@@ -22,14 +22,14 @@ public class CoreWorkflow {
 		return CoreWorkflow.instance;
 	}
 
-	public Workflow getNextWorkflow(Long idProduct, Integer idSector, int actualStage, Integer idArea) {
+	public Workflow getNextWorkflow(Integer idSector, int actualStage, Integer idArea) {
 
 		int newStage = actualStage+1;
-		return this.dao.getWorkflow(idProduct, idSector, newStage, idArea);
+		return this.dao.getWorkflow(idSector, newStage, idArea);
 	}
 	
 	public Workflow getFirstWorkflowByProductAndArea(Integer idArea, Long idProduct) {
 		
-		return this.dao.getFirstWorkflowByProductAndArea(idArea, idProduct);
+		return this.dao.getFirstWorkflowByProductAndArea(idArea);
 	}
 }
