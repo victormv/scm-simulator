@@ -6,6 +6,7 @@ import java.util.List;
 import br.gov.ifpb.scm.core.CoreConstants;
 import br.gov.ifpb.scm.core.CoreProceeding;
 import br.gov.ifpb.scm.core.CoreRework;
+import br.gov.ifpb.scm.core.CoreSector;
 import br.gov.ifpb.scm.dao.DAO;
 import br.gov.ifpb.scm.model.OrderServiceProduct;
 import br.gov.ifpb.scm.model.Proceeding;
@@ -19,12 +20,15 @@ public class OperatorSectorThread extends AbstractOperatorThread {
 	private DAO dao;
 	private Sector sector;
 	private List<Integer> listProductionLineStatus;
+	private Character sectorType;
 
 	public OperatorSectorThread(Sector sector) {
 
 		this.sector = sector;
 
 		this.dao = new DAO(JpaUtil.createEntityManager());
+		
+		this.sectorType = CoreSector.getSectorType(this.sector.getId(), dao);
 
 		this.listProductionLineStatus = new ArrayList<Integer>();
 		this.listProductionLineStatus.add(CoreConstants.PRODUCTION_LINE_STATUS_PRODUCING);
@@ -53,15 +57,19 @@ public class OperatorSectorThread extends AbstractOperatorThread {
 					// START TASK
 					proceeding = this.startSectorTask(proceeding);
 
-					// REWORK
-					if(CoreRework.checkRework()) {
-						CoreRework.processRework(proceeding, productionLine, orderServiceProduct, this.dao);
-						continue;
+					// SETOR DE INSPECAO
+					if(this.sectorType == 'D') {
+						// REWORK
+						if(CoreRework.checkRework()) {
+							CoreRework.processRework(proceeding, productionLine, orderServiceProduct, this.dao);
+							continue;
+						}
+
+						// DELAY
+						Thread.sleep(Util.getRandom(CoreConstants.PROCEEDINGS_SLEEP_MS_TASK_MIN, CoreConstants.PROCEEDINGS_SLEEP_MS_TASK_MAX));
 					}
-
-					// DELAY
-					Thread.sleep(Util.getRandom(CoreConstants.PROCEEDINGS_SLEEP_MS_TASK_MIN, CoreConstants.PROCEEDINGS_SLEEP_MS_TASK_MAX));
-
+					
+					
 					// END TASK
 					this.endSectorTask(proceeding, productionLine, orderServiceProduct);
 				}

@@ -41,7 +41,7 @@ public class CoreConstants {
 	public final static int PRODUCTION_LINE_STATUS_DISCARDED = 5;
 	
 	public final static int PRODUCTION_LINE_REWORK_MAX = 3;
-	public final static int PRODUCTION_LINE_REWORK_PROBABILITY = 20;
+	public final static int PRODUCTION_LINE_REWORK_PROBABILITY = 75;
 	
 	
 	public final static int USER_OPERATION_LEADER_ID = 1;

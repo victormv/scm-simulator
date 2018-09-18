@@ -150,6 +150,9 @@ public class DAO {
 		proc.setIdSectorFailure(idSectorFailure);
 		proc.setIdSectorOrigin(idSectorOrigin);
 		proc.setStage(stage);
+		
+		
+		
 		proc.setType(type);
 
 		this.em.persist(proc);
@@ -359,5 +362,52 @@ public class DAO {
 			return obj.longValue();
 		}
 		return 0;
+	}
+	
+	public boolean isSectorTypeIn(Integer idSector) {
+		String sql = "SELECT " +
+				  "count(*) as counter " +
+				  "FROM " +
+				  "dashboard.workflows " +
+				  "WHERE " +
+				  "stage IN ( " +
+				  "(select min(stage) from dashboard.workflows) " +
+				  ") " +
+				  "AND " +
+				  "id_sector_destination = " + idSector; 
+				
+		int count = ((BigInteger) this.em.createNativeQuery(sql).getSingleResult()).intValue();
+		if(count > 0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public boolean isSectorTypeOut(Integer idSector) {
+		String sql = "SELECT " +
+				  "count(*) as counter " +
+				  "FROM " +
+				  "dashboard.workflows " +
+				  "WHERE " +
+				  "stage IN ( " +
+				  "(select max(stage) from dashboard.workflows) " +
+				  ") " +
+				  "AND " +
+				  "id_sector_destination = " + idSector; 
+				
+		int count = ((BigInteger) this.em.createNativeQuery(sql).getSingleResult()).intValue();
+		if(count > 0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public Workflow getLastWorkflow() {
+		String sql = "select * from dashboard.workflows where stage = (select max(stage) from dashboard.workflows)";
+		List<Workflow> list = (List<Workflow>) this.em.createNativeQuery(sql, Workflow.class).getResultList();
+		return list.get(0);
 	}
 }

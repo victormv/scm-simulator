@@ -30,7 +30,8 @@ public class CoreRework {
 		} else {
 			Workflow wf = CoreWorkflow.getInstance().
 				getFirstWorkflowByProductAndArea(CoreConstants.AREA_SPECIFIC_ID, orderServiceProduct.getIdProduct());
-			dao.persistProceeding(productionLine.getId(), wf.getIdSectorDestination(), wf.getIdSectorOrigin(), wf.getStage(), null, 'D');
+			Character sectorType = CoreSector.getSectorType(wf.getIdSectorDestination(), dao);
+			dao.persistProceeding(productionLine.getId(), wf.getIdSectorDestination(), wf.getIdSectorOrigin(), wf.getStage(), null, sectorType);
 		}
 	}
 	
@@ -39,5 +40,8 @@ public class CoreRework {
 		
 		dao.updateProductionLineStatus(productionLine.getId(), CoreConstants.PRODUCTION_LINE_STATUS_DISCARDED);
 		CoreProductionLine.createNewProductionLineAndPersistFirstProceeding(orderServiceProduct, dao);
+		
+		Workflow lastWorkflow = dao.getLastWorkflow();
+		dao.persistProceeding(productionLine.getId(), lastWorkflow.getIdSectorDestination(), lastWorkflow.getIdSectorDestination(), lastWorkflow.getStage(), null, 'O');
 	}
 }

@@ -52,7 +52,8 @@ public class CoreProceeding {
 		if(wf == null) {
 			CoreProductionLine.endProductionLine(productionLine, orderServiceProduct, dateNow, dao);
 		} else {
-			dao.persistProceeding(productionLine.getId(), wf.getIdSectorDestination(), wf.getIdSectorOrigin(), wf.getStage(), null, 'O');
+			Character sectorType = CoreSector.getSectorType(wf.getIdSectorDestination(), dao);
+			dao.persistProceeding(productionLine.getId(), wf.getIdSectorDestination(), wf.getIdSectorOrigin(), wf.getStage(), null, sectorType);
 		}
 	}
 }
