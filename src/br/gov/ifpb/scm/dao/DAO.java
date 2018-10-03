@@ -1,6 +1,7 @@
 package br.gov.ifpb.scm.dao;
 
 import java.math.BigInteger;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -8,9 +9,12 @@ import javax.persistence.EntityManager;
 import br.gov.ifpb.scm.core.CoreConstants;
 import br.gov.ifpb.scm.model.OrderService;
 import br.gov.ifpb.scm.model.OrderServiceProduct;
+import br.gov.ifpb.scm.model.PlanningDailyTime;
+import br.gov.ifpb.scm.model.PlanningWeekly;
 import br.gov.ifpb.scm.model.Proceeding;
 import br.gov.ifpb.scm.model.ProductionLine;
 import br.gov.ifpb.scm.model.Sector;
+import br.gov.ifpb.scm.model.User;
 import br.gov.ifpb.scm.model.Workflow;
 import br.gov.ifpb.scm.model.to.ProductionLineStage;
 import br.gov.ifpb.scm.util.SequentialIncrement;
@@ -60,12 +64,12 @@ public class DAO {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Sector> getSectors(Integer idArea) {
+	public List<Sector> getSectorsInWorkflow(Integer idArea) {
 		String sql;
 		if(idArea == null) {
-			sql = "select * from dashboard.sectors";
+			sql = "select * from dashboard.sectors where id IN (select id_sector_destination from dashboard.workflows)";
 		} else {
-			sql = "select * from dashboard.sectors where id_area = " + idArea;
+			sql = "select * from dashboard.sectors where id IN (select id_sector_destination from dashboard.workflows) and id_area = " + idArea;
 		}
 		return (List<Sector>) this.em.createNativeQuery(sql, Sector.class).getResultList();
 	}
@@ -410,4 +414,77 @@ public class DAO {
 		List<Workflow> list = (List<Workflow>) this.em.createNativeQuery(sql, Workflow.class).getResultList();
 		return list.get(0);
 	}
+	
+	public PlanningWeekly persistPlanningWeekly(Date dateWeekStart, Date dateWeekEnd) {
+		this.em.getTransaction().begin();
+		PlanningWeekly pw = new PlanningWeekly();
+
+		pw.setDateWeekStart(dateWeekStart);
+		pw.setDateWeekEnd(dateWeekEnd);
+		pw.setIdUserCreated(CoreConstants.USER_OPERATION_ID);
+
+		this.em.persist(pw);
+		this.em.getTransaction().commit();
+		return pw;
+	}
+	
+	public PlanningDailyTime persistPlanningDailyTime(
+		Long idPlanningWeekly,
+		Long idOrderService,
+		Date date,
+		String timeBegin,
+		String timeEnd,
+		Integer amount) {
+		this.em.getTransaction().begin();
+		PlanningDailyTime pdt = new PlanningDailyTime();
+
+		pdt.setIdPlanningWeekly(idPlanningWeekly);
+		pdt.setIdOrderService(idOrderService);
+		pdt.setDate(date);
+		pdt.setTimeBegin(new Date());
+		pdt.setTimeEnd(new Date());
+		pdt.setAmount(amount);
+		pdt.setIdUserCreated(CoreConstants.USER_OPERATION_ID);
+
+		this.em.persist(pdt);
+		this.em.getTransaction().commit();
+		return pdt;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public PlanningWeekly getActualPlanningWeekly(Date dataAtual) {
+		String sql = 
+			"SELECT * FROM dashboard.planning_weekly WHERE '" + dataAtual + "' BETWEEN date_week_start and date_week_end;";
+		List<PlanningWeekly> list = 
+			(List<PlanningWeekly>) this.em.createNativeQuery(sql, PlanningWeekly.class).getResultList();
+		if(list == null || list.isEmpty()) {
+			return null;
+		} else {
+			return list.get(0);
+		}
+	}
+	
+	public User persistUser(
+			String name,
+			String email,
+			String password,
+			boolean blocked,
+			String matriculation,
+			Long idAccessProfile) {
+			this.em.getTransaction().begin();
+			User user = new User();
+
+			user.setName(name);
+			user.setEmail(email);
+			user.setPassword(password);
+			user.setIdUserCreated(CoreConstants.USER_OPERATION_LEADER_ID);
+			user.setIdArea(CoreConstants.AREA_SPECIFIC_ID);
+			user.setBlocked(blocked);
+			user.setMatriculation(matriculation);
+			user.setIdAccessProfile(idAccessProfile);
+
+			this.em.persist(user);
+			this.em.getTransaction().commit();
+			return user;
+		}
 }

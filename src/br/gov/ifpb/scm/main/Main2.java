@@ -13,56 +13,75 @@ import java.util.Map;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import br.gov.ifpb.scm.core.CoreConstants;
+import br.gov.ifpb.scm.model.to.ListPlanningIsCurrentDateResponseData;
+import br.gov.ifpb.scm.model.to.ListProductionLineProducingResponseData;
+import br.gov.ifpb.scm.model.to.ResponseData;
+import br.gov.ifpb.scm.requests.GenericRequest;
+import br.gov.ifpb.scm.requests.OrderProductRequest;
+import br.gov.ifpb.scm.util.SequentialIncrement;
+
 public class Main2 {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 		
-		Main2 main = new Main2();
-		String loginJSON = new Main2().login();
+//		ListPlanningIsCurrentDateResponseData listOpsInSector = 
+//				OrderProductRequest.listPlanningOpInCurrentDateGet("");
+//
+//		if(listOpsInSector != null && listOpsInSector.getIdOp() != null) {
+//			System.out.println("OP: " + listOpsInSector.getIdOp());
+//		}
+//		
 		
-		Gson gson = new Gson();
-		Map<String, Object> map = 
-			gson.fromJson(loginJSON, new TypeToken<Map<String, Object>>(){}.getType());
+//
+		Map<String,Object> params = new LinkedHashMap<String,Object>();
+		params.put("userId", 4);
+		params.put("sectorId", 4);
+		
+		ListProductionLineProducingResponseData rd = OrderProductRequest.listProductionLineProducingGet("", params);
+		
+		System.out.println("OP: " + rd.getIdOp());
+		System.out.println("SEQUENTIAL: " + rd.getSequential());
+		System.out.println("MESSAGE: " + rd.getMessage());
 		
 		
-		String result = main.startTask(map.get("token").toString());
-				
-		System.out.println(result);
+		//System.out.println(get("production-lines/producing?userId=1&sectorId=1", "", null));
+		
+		
+		//sendGet("http://localhost:3004/api/v1/production-lines/producing?userId=1&sectorId=1");
 	}
 
-	public String login() {
+	public static Map<String, Object> get(String route, String token, Map<String, Object> requestParams) {
 		HttpURLConnection connection = null;
 
 		try {
-			URL url = new URL("http://localhost:3004/api/v1/login");
+			URL url = new URL(CoreConstants.URL_API + route);
 			connection = (HttpURLConnection) url.openConnection();
-			connection.setRequestMethod("POST");
-			connection.setRequestProperty("Content-Type", 
-					"application/x-www-form-urlencoded");
-
-			connection.setRequestProperty("Content-Language", "pt-BR");  
-
+			connection.setRequestMethod("GET");
+			connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+			connection.setRequestProperty("Content-Language", "pt-BR");
+			if(token != null) {
+				connection.addRequestProperty("Authorization", "BEARER " + token);
+			}
 			connection.setUseCaches(false);
 			connection.setDoOutput(true);
-			
-			Map<String,Object> params = new LinkedHashMap<>();
-	        params.put("email", "admin@scm.com");
-	        params.put("password", "12345");
-	        
-	        StringBuilder postData = new StringBuilder();
-	        for (Map.Entry<String,Object> param : params.entrySet()) {
-	            if (postData.length() != 0) postData.append('&');
-	            postData.append(URLEncoder.encode(param.getKey(), "UTF-8"));
-	            postData.append('=');
-	            postData.append(URLEncoder.encode(String.valueOf(param.getValue()), "UTF-8"));
-	        }
-	        byte[] postDataBytes = postData.toString().getBytes("UTF-8");
 
-			//Send request
-			DataOutputStream wr = new DataOutputStream (
-					connection.getOutputStream());
-			wr.write(postDataBytes);
-			wr.close();
+			StringBuilder result = new StringBuilder();
+
+			if(requestParams != null) {
+				for (Map.Entry<String,Object> param : requestParams.entrySet()) {
+					connection.addRequestProperty(param.getKey(), param.getValue().toString());
+					result.append(URLEncoder.encode(param.getKey(), "UTF-8"));
+					result.append("=");
+					result.append(URLEncoder.encode(param.getValue().toString(), "UTF-8"));
+					result.append("&");
+				}
+
+				//Send request
+				DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
+				wr.writeBytes(result.toString());
+				wr.close();
+			}
 
 			//Get Response  
 			InputStream is = connection.getInputStream();
@@ -74,7 +93,9 @@ public class Main2 {
 				response.append('\r');
 			}
 			rd.close();
-			return response.toString();
+			Map<String, Object> map = 
+					new Gson().fromJson(response.toString(), new TypeToken<Map<String, Object>>(){}.getType());
+			return map;
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
@@ -84,64 +105,34 @@ public class Main2 {
 			}
 		}
 	}
-	
-	public String startTask(String token) {
-		System.out.println(token);
-		
-		HttpURLConnection connection = null;
 
-		try {
-			URL url = new URL("http://localhost:3004/api/v1/pocket/start-task");
-			connection = (HttpURLConnection) url.openConnection();
-			connection.setRequestMethod("POST");
-			connection.setRequestProperty("Content-Type", 
-					"application/x-www-form-urlencoded");
-
-			connection.setRequestProperty("Content-Language", "pt-BR");  
-			
-			connection.addRequestProperty("Authorization", "BEARER " + token);
-
-			connection.setUseCaches(false);
-			connection.setDoOutput(true);
-			
-			Map<String,Object> params = new LinkedHashMap<>();
-	        params.put("idOp", "1");
-	        params.put("idUser", "1");
-	        params.put("sequential", "1");
-	        
-	        StringBuilder postData = new StringBuilder();
-	        for (Map.Entry<String,Object> param : params.entrySet()) {
-	            if (postData.length() != 0) postData.append('&');
-	            postData.append(URLEncoder.encode(param.getKey(), "UTF-8"));
-	            postData.append('=');
-	            postData.append(URLEncoder.encode(String.valueOf(param.getValue()), "UTF-8"));
-	        }
-	        byte[] postDataBytes = postData.toString().getBytes("UTF-8");
-
-			//Send request
-			DataOutputStream wr = new DataOutputStream (
-					connection.getOutputStream());
-			wr.write(postDataBytes);
-			wr.close();
-
-			//Get Response  
-			InputStream is = connection.getInputStream();
-			BufferedReader rd = new BufferedReader(new InputStreamReader(is));
-			StringBuilder response = new StringBuilder(); // or StringBuffer if Java version 5+
-			String line;
-			while ((line = rd.readLine()) != null) {
-				response.append(line);
-				response.append('\r');
-			}
-			rd.close();
-			return response.toString();
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		} finally {
-			if (connection != null) {
-				connection.disconnect();
-			}
-		}
-	}
+//	// HTTP GET request
+//	private static void sendGet(String url) throws Exception {
+//
+//		URL obj = new URL(url);
+//		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+//
+//		// optional default is GET
+//		con.setRequestMethod("GET");
+//
+//		//add request header
+//
+//		int responseCode = con.getResponseCode();
+//		System.out.println("\nSending 'GET' request to URL : " + url);
+//		System.out.println("Response Code : " + responseCode);
+//
+//		BufferedReader in = new BufferedReader(
+//				new InputStreamReader(con.getInputStream()));
+//		String inputLine;
+//		StringBuffer response = new StringBuffer();
+//
+//		while ((inputLine = in.readLine()) != null) {
+//			response.append(inputLine);
+//		}
+//		in.close();
+//
+//		//print result
+//		System.out.println(response.toString());
+//
+//	}
 }

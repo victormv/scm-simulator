@@ -4,10 +4,12 @@ public class CoreConstants {
 	
 	public final static boolean DB_WIPE = true;
 	
+	public final static String URL_API = "http://localhost:3004/api/v1/";
 	
-	public final static int ORDER_SERVICES_LIMIT = 100;
-	public final static int ORDER_SERVICES_CREATE_SLEEP_MS_MIN = 12000;
-	public final static int ORDER_SERVICES_CREATE_SLEEP_MS_MAX = 16000;
+	
+	public final static int ORDER_SERVICES_LIMIT = 3;
+	public final static int ORDER_SERVICES_CREATE_SLEEP_MS_MIN = 600000;
+	public final static int ORDER_SERVICES_CREATE_SLEEP_MS_MAX = 1200000;
 	public final static int ORDER_SERVICES_OSP_MIN = 1;
 	public final static int ORDER_SERVICES_OSP_MAX = 1;
 	
@@ -41,7 +43,7 @@ public class CoreConstants {
 	public final static int PRODUCTION_LINE_STATUS_DISCARDED = 5;
 	
 	public final static int PRODUCTION_LINE_REWORK_MAX = 3;
-	public final static int PRODUCTION_LINE_REWORK_PROBABILITY = 75;
+	public final static int PRODUCTION_LINE_REWORK_PROBABILITY = 35;
 	
 	
 	public final static int USER_OPERATION_LEADER_ID = 1;
@@ -50,5 +52,7 @@ public class CoreConstants {
 	
 	public final static boolean AREA_SPECIFIC = true;
 	public final static int AREA_SPECIFIC_ID = 1;
+	
+	public final static long ID_ACCESS_PROFILE_DEFAULT = 1;
 }
 

@@ -17,8 +17,10 @@ public class Main {
 		
 		if(CoreConstants.DB_WIPE) {
 			dao.wipeDB();
+			System.out.println("[LOG] Limpando banco de dados...");
 		}
 		
+		// Cria as threads responsaveis pelo papel do lider de produção
 		OperatorLeaderThread operatoLeaderCreator = new OperatorLeaderThread();
 		Thread operatoLeaderCreatorThread = new Thread(operatoLeaderCreator);
 		
@@ -26,9 +28,9 @@ public class Main {
 		
 		List<Sector> listSectors;
 		if(CoreConstants.AREA_SPECIFIC) {
-			listSectors = dao.getSectors(CoreConstants.AREA_SPECIFIC_ID);
+			listSectors = dao.getSectorsInWorkflow(CoreConstants.AREA_SPECIFIC_ID);
 		} else {
-			listSectors = dao.getSectors(null);
+			listSectors = dao.getSectorsInWorkflow(null);
 		}
 		
 		OperatorSectorThread operatorSector;

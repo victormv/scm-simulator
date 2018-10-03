@@ -1,15 +1,20 @@
 package br.gov.ifpb.scm.core.threads;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Date;
 
 import br.gov.ifpb.scm.core.CoreConstants;
-import br.gov.ifpb.scm.core.CoreProductionLine;
 import br.gov.ifpb.scm.model.OrderService;
-import br.gov.ifpb.scm.model.OrderServiceProduct;
+import br.gov.ifpb.scm.model.PlanningWeekly;
 import br.gov.ifpb.scm.util.Util;
 
-public class OperatorLeaderThread extends AbstractOperatorThread {	
+public class OperatorLeaderThread extends AbstractOperatorThread {
+	
+	public OperatorLeaderThread() {
+		//Cria um plajenamento semanal responsavel pela semana
+//		Calendar calendario = new GregorianCalendar();
+//		calendario.add(Calendar.DAY_OF_MONTH, 7);
+//		this.dao.persistPlanningWeekly(new Date(), calendario.getTime());
+	}
 	
 	@Override
 	public void run() {
@@ -17,31 +22,28 @@ public class OperatorLeaderThread extends AbstractOperatorThread {
 		super.out("Executing Operator Leader...");
 		
 		OrderService os = null;
-		OrderServiceProduct osp = null;
-		
-		List<Long> listIdProductUsed = new ArrayList<>();
-		
-		int limitOSP = Util.getRandom(CoreConstants.ORDER_SERVICES_OSP_MIN, CoreConstants.ORDER_SERVICES_OSP_MAX);
 		
 		// Create O.S. 
 		for(int i = 0; i < CoreConstants.ORDER_SERVICES_LIMIT; i++) {
 			
 			os = this.dao.persistOrderService(this.getCodeOrderService());
+			System.out.println("[LOG] Criando OP " + os.getId());
 			
-			listIdProductUsed.clear();
+			PlanningWeekly pwAtual = this.dao.getActualPlanningWeekly(new Date());
+			
+			int quantidadeDeProdutos = Util.getRandom(CoreConstants.ORDER_SERVICES_PRODUCT_MIN, CoreConstants.ORDER_SERVICES_PRODUCT_MAX);
+			
+			this.dao.persistPlanningDailyTime(
+				pwAtual.getId(),
+				os.getId(),
+				new Date(),
+				"10:00",
+				"11:00",
+				quantidadeDeProdutos);
 			
 			// Create O.S.P
-			for(int j = 0; j < limitOSP; j++) {
-				osp = this.dao.persistOrderServiceProduct(os, Util.getRandom(CoreConstants.ORDER_SERVICES_PRODUCT_MIN, CoreConstants.ORDER_SERVICES_PRODUCT_MAX), 
-					CoreConstants.AREA_SPECIFIC_ID, this.dao.getIdProductRandom(listIdProductUsed));
-				
-				listIdProductUsed.add(osp.getIdProduct());
-				
-				// Create Production Lines and first proceeding
-				for(int z = 0; z < osp.getAmount(); z++) {
-					CoreProductionLine.createNewProductionLineAndPersistFirstProceeding(osp, this.dao);
-				}
-			}
+			this.dao.persistOrderServiceProduct(os, quantidadeDeProdutos, 
+				CoreConstants.AREA_SPECIFIC_ID, this.dao.getIdProductRandom(null));
 			
 			// DELAY
 			try {
