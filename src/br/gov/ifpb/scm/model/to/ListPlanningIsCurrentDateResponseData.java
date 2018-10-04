@@ -2,13 +2,13 @@ package br.gov.ifpb.scm.model.to;
 
 public class ListPlanningIsCurrentDateResponseData extends ResponseData {
 	
-	private Integer idOp;
+	private Long idOp;
 	private String codeOp;
 	
-	public Integer getIdOp() {
+	public Long getIdOp() {
 		return idOp;
 	}
-	public void setIdOp(Integer idOp) {
+	public void setIdOp(Long idOp) {
 		this.idOp = idOp;
 	}
 	public String getCodeOp() {

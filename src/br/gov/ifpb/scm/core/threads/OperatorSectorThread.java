@@ -88,25 +88,26 @@ public class OperatorSectorThread extends AbstractOperatorThread {
 
 		while(true) {
 
-			Integer idOp = null;
+			Long idOp = null;
 			String sequential = null;
 			// SETOR DE INSPECAO
 			if (this.sectorType == 'I') {
 				ListPlanningIsCurrentDateResponseData listOpsInSector = 
 						OrderProductRequest.listPlanningOpInCurrentDateGet(this.login.getToken());
-				System.out.println("[LOG] Buscando OP(I) no setor " + this.sector.getId());
+				System.out.println("[LOG] Buscando OP(I) no setor " + this.sector.getAcronym());
 				System.out.println("OP ACHOU: " + listOpsInSector.getIdOp());
 				if(listOpsInSector != null && listOpsInSector.getIdOp() != null) {
 					idOp = listOpsInSector.getIdOp();
 					sequential = String.valueOf(SequentialIncrement.getInstance().getSequential());
 				}
+				System.out.println("SEQ ACHOU: " + sequential);
 			} else {
 				Map<String,Object> listParams = new LinkedHashMap<>();
 				listParams.put("userId", this.user.getId());
 				listParams.put("sectorId", this.sector.getId());
 				ListProductionLineProducingResponseData listOpsProducing =
 					OrderProductRequest.listProductionLineProducingGet(this.login.getToken(), listParams);
-				System.out.println("[LOG] Buscando OP no setor " + this.sector.getId());
+				System.out.println("[LOG] Buscando OP no setor " + this.sector.getAcronym());
 				System.out.println("OP ACHOU: " + listOpsProducing.getIdOp());
 				System.out.println("SEQ ACHOU: " + listOpsProducing.getSequential());
 				if(listOpsProducing != null && 
@@ -118,7 +119,7 @@ public class OperatorSectorThread extends AbstractOperatorThread {
 				}
 			}
 
-			if(idOp == null) {
+			if(sequential == null || idOp == null) {
 				try {
 					Thread.sleep(Util.getRandom(CoreConstants.PROCEEDINGS_SLEEP_MS_TASK_MIN, CoreConstants.PROCEEDINGS_SLEEP_MS_TASK_MAX));
 				} catch(Exception e) {
@@ -134,11 +135,16 @@ public class OperatorSectorThread extends AbstractOperatorThread {
 
 			ResponseData startTaskResponseData =
 					PocketRequest.startTaskPost(startTaskParams, this.login.getToken());
-			System.out.println("[LOG] Iniciando tarefa no setor " + this.sector.getId());
+			System.out.println("[LOG] Iniciando tarefa no setor " + this.sector.getAcronym() + "[" + idOp + "; " + sequential + "]");
 			if(!startTaskResponseData.isSuccess()) {
 				System.err.println("[ERROR] Não foi possível iniciar a tarefa no setor " + this.sector.getAcronym() + ", usuario " + this.user.getMatriculation());
 				System.err.println("[ERROR] " + startTaskResponseData.getMessage());
-				return;
+				try {
+					Thread.sleep(Util.getRandom(CoreConstants.PROCEEDINGS_SLEEP_MS_TASK_MIN, CoreConstants.PROCEEDINGS_SLEEP_MS_TASK_MAX));
+				} catch(Exception e) {
+
+				}
+				continue;
 			}
 
 			try {
@@ -157,11 +163,16 @@ public class OperatorSectorThread extends AbstractOperatorThread {
 	
 				ResponseData endTaskResponseData =
 						PocketRequest.endTaskPost(endTaskParams, this.login.getToken());
-				System.out.println("[LOG] Finalizando tarefa no setor " + this.sector.getId());
+				System.out.println("[LOG] Finalizando tarefa no setor " + this.sector.getAcronym() + "[" + idOp + "; " + sequential + "]");
 				if(!endTaskResponseData.isSuccess()) {
 					System.err.println("[ERROR] Não foi possível finalizar a tarefa no setor " + this.sector.getAcronym() + ", usuario " + this.user.getMatriculation());
 					System.err.println("[ERROR] " + endTaskResponseData.getMessage());
-					return;
+					try {
+						Thread.sleep(Util.getRandom(CoreConstants.PROCEEDINGS_SLEEP_MS_TASK_MIN, CoreConstants.PROCEEDINGS_SLEEP_MS_TASK_MAX));
+					} catch(Exception e) {
+
+					}
+					continue;
 				}
 			}
 

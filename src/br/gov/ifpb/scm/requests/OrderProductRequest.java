@@ -22,7 +22,7 @@ public class OrderProductRequest {
 		StringMap<Object> sm = (StringMap<Object>) al.get(0);
 
 		Double d = Double.parseDouble(sm.get("id").toString());
-		data.setIdOp(d.intValue());
+		data.setIdOp(d.longValue());
 		data.setCodeOp(sm.get("code").toString());
 
 		return data;
@@ -43,8 +43,8 @@ public class OrderProductRequest {
 				if(al != null && !al.isEmpty()) {
 					StringMap<Object> sm = (StringMap<Object>) al.get(0);
 
-					Double d = Double.parseDouble(sm.get("id").toString());
-					data.setIdOp(d.intValue());
+					Double d = Double.parseDouble(sm.get("osp").toString());
+					data.setIdOp(d.longValue());
 					data.setSequential(sm.get("sequential").toString());
 				}
 			}

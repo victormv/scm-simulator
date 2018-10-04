@@ -40,7 +40,6 @@ public class Main2 {
 		
 		ListProductionLineProducingResponseData rd = OrderProductRequest.listProductionLineProducingGet("", params);
 		
-		System.out.println("OP: " + rd.getIdOp());
 		System.out.println("SEQUENTIAL: " + rd.getSequential());
 		System.out.println("MESSAGE: " + rd.getMessage());
 		
