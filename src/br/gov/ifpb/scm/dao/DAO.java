@@ -16,11 +16,12 @@ import br.gov.ifpb.scm.model.ProductionLine;
 import br.gov.ifpb.scm.model.Sector;
 import br.gov.ifpb.scm.model.User;
 import br.gov.ifpb.scm.model.Workflow;
+import br.gov.ifpb.scm.model.to.ProductionLineOp;
 import br.gov.ifpb.scm.model.to.ProductionLineStage;
 import br.gov.ifpb.scm.util.SequentialIncrement;
 
 public class DAO {
-	
+
 	private EntityManager em;
 
 	public DAO(EntityManager em) {
@@ -31,11 +32,11 @@ public class DAO {
 		String sqlBase = "update dashboard.production_lines " +
 				"set id_production_line_status = " + idProductionLineStatus + " ";
 		String sqlWhere = "where id = " + idProductionLine;
-		
+
 		if(idProductionLineStatus == CoreConstants.PRODUCTION_LINE_STATUS_DISCARDED) {
 			sqlBase += ", moment_ended = now() ";
 		}
-		
+
 		this.em.getTransaction().begin();
 		int res = this.em.createNativeQuery(sqlBase + sqlWhere).executeUpdate();
 		this.em.getTransaction().commit();
@@ -95,13 +96,13 @@ public class DAO {
 
 		return ((BigInteger) this.em.createNativeQuery(sql).getSingleResult()).intValue();
 	}
-	
+
 	public int getTimesOverRework(Long idProductionLine) {
 		String sql = "select count(*) " +
 				"from dashboard.proceedings " +
 				"where id_production_line = " + idProductionLine + " " +
 				"and id_sector_failure is not null";
-				
+
 		return ((BigInteger) this.em.createNativeQuery(sql).getSingleResult()).intValue();
 	}
 
@@ -154,9 +155,9 @@ public class DAO {
 		proc.setIdSectorFailure(idSectorFailure);
 		proc.setIdSectorOrigin(idSectorOrigin);
 		proc.setStage(stage);
-		
-		
-		
+
+
+
 		proc.setType(type);
 
 		this.em.persist(proc);
@@ -180,7 +181,7 @@ public class DAO {
 			return null;
 		}
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public Workflow getWorkflow(Integer idSector, int stage, Integer idArea) {
 		String sql = "select * from dashboard.workflows " +
@@ -264,7 +265,7 @@ public class DAO {
 	}
 
 	public OrderService persistOrderService(String code) {	
-		
+
 		this.em.getTransaction().begin();
 		OrderService os = new OrderService();
 		os.setCode(code);
@@ -299,7 +300,7 @@ public class DAO {
 		pl.setIdProductionLineStatus(idProductionLineStatus);
 		pl.setMomentStarted(null);
 		pl.setMomentEnded(null);
-		pl.setSequential(SequentialIncrement.getInstance().getSequential());
+		pl.setSequential(String.valueOf(SequentialIncrement.getInstance().getSequential()));
 
 		this.em.persist(pl);
 		this.em.getTransaction().commit();
@@ -367,19 +368,19 @@ public class DAO {
 		}
 		return 0;
 	}
-	
+
 	public boolean isSectorTypeIn(Integer idSector) {
 		String sql = "SELECT " +
-				  "count(*) as counter " +
-				  "FROM " +
-				  "dashboard.workflows " +
-				  "WHERE " +
-				  "stage IN ( " +
-				  "(select min(stage) from dashboard.workflows) " +
-				  ") " +
-				  "AND " +
-				  "id_sector_destination = " + idSector; 
-				
+				"count(*) as counter " +
+				"FROM " +
+				"dashboard.workflows " +
+				"WHERE " +
+				"stage IN ( " +
+				"(select min(stage) from dashboard.workflows) " +
+				") " +
+				"AND " +
+				"id_sector_destination = " + idSector; 
+
 		int count = ((BigInteger) this.em.createNativeQuery(sql).getSingleResult()).intValue();
 		if(count > 0) {
 			return true;
@@ -387,19 +388,19 @@ public class DAO {
 			return false;
 		}
 	}
-	
+
 	public boolean isSectorTypeOut(Integer idSector) {
 		String sql = "SELECT " +
-				  "count(*) as counter " +
-				  "FROM " +
-				  "dashboard.workflows " +
-				  "WHERE " +
-				  "stage IN ( " +
-				  "(select max(stage) from dashboard.workflows) " +
-				  ") " +
-				  "AND " +
-				  "id_sector_destination = " + idSector; 
-				
+				"count(*) as counter " +
+				"FROM " +
+				"dashboard.workflows " +
+				"WHERE " +
+				"stage IN ( " +
+				"(select max(stage) from dashboard.workflows) " +
+				") " +
+				"AND " +
+				"id_sector_destination = " + idSector; 
+
 		int count = ((BigInteger) this.em.createNativeQuery(sql).getSingleResult()).intValue();
 		if(count > 0) {
 			return true;
@@ -407,14 +408,14 @@ public class DAO {
 			return false;
 		}
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public Workflow getLastWorkflow() {
 		String sql = "select * from dashboard.workflows where stage = (select max(stage) from dashboard.workflows)";
 		List<Workflow> list = (List<Workflow>) this.em.createNativeQuery(sql, Workflow.class).getResultList();
 		return list.get(0);
 	}
-	
+
 	public PlanningWeekly persistPlanningWeekly(Date dateWeekStart, Date dateWeekEnd) {
 		this.em.getTransaction().begin();
 		PlanningWeekly pw = new PlanningWeekly();
@@ -427,14 +428,14 @@ public class DAO {
 		this.em.getTransaction().commit();
 		return pw;
 	}
-	
+
 	public PlanningDailyTime persistPlanningDailyTime(
-		Long idPlanningWeekly,
-		Long idOrderService,
-		Date date,
-		String timeBegin,
-		String timeEnd,
-		Integer amount) {
+			Long idPlanningWeekly,
+			Long idOrderService,
+			Date date,
+			String timeBegin,
+			String timeEnd,
+			Integer amount) {
 		this.em.getTransaction().begin();
 		PlanningDailyTime pdt = new PlanningDailyTime();
 
@@ -450,20 +451,20 @@ public class DAO {
 		this.em.getTransaction().commit();
 		return pdt;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public PlanningWeekly getActualPlanningWeekly(Date dataAtual) {
 		String sql = 
-			"SELECT * FROM dashboard.planning_weekly WHERE '" + dataAtual + "' BETWEEN date_week_start and date_week_end;";
+				"SELECT * FROM dashboard.planning_weekly WHERE '" + dataAtual + "' BETWEEN date_week_start and date_week_end;";
 		List<PlanningWeekly> list = 
-			(List<PlanningWeekly>) this.em.createNativeQuery(sql, PlanningWeekly.class).getResultList();
+				(List<PlanningWeekly>) this.em.createNativeQuery(sql, PlanningWeekly.class).getResultList();
 		if(list == null || list.isEmpty()) {
 			return null;
 		} else {
 			return list.get(0);
 		}
 	}
-	
+
 	public User persistUser(
 			String name,
 			String email,
@@ -471,20 +472,51 @@ public class DAO {
 			boolean blocked,
 			String matriculation,
 			Long idAccessProfile) {
-			this.em.getTransaction().begin();
-			User user = new User();
+		this.em.getTransaction().begin();
+		User user = new User();
 
-			user.setName(name);
-			user.setEmail(email);
-			user.setPassword(password);
-			user.setIdUserCreated(CoreConstants.USER_OPERATION_LEADER_ID);
-			user.setIdArea(CoreConstants.AREA_SPECIFIC_ID);
-			user.setBlocked(blocked);
-			user.setMatriculation(matriculation);
-			user.setIdAccessProfile(idAccessProfile);
+		user.setName(name);
+		user.setEmail(email);
+		user.setPassword(password);
+		user.setIdUserCreated(CoreConstants.USER_OPERATION_LEADER_ID);
+		user.setIdArea(CoreConstants.AREA_SPECIFIC_ID);
+		user.setBlocked(blocked);
+		user.setMatriculation(matriculation);
+		user.setIdAccessProfile(idAccessProfile);
 
-			this.em.persist(user);
-			this.em.getTransaction().commit();
-			return user;
+		this.em.persist(user);
+		this.em.getTransaction().commit();
+		return user;
+	}
+
+	@SuppressWarnings("unchecked")
+	public ProductionLineOp getPendingEntrance() {
+		String sql = 
+			"select " + 
+			"  pl.*, osp.id_order_service " +
+			"from " +
+			"  dashboard.proceedings pr " +
+			"join " +
+			"  dashboard.production_lines pl on (pl.id = pr.id_production_line and pl.id_production_line_status = 2) " +
+			"join " +
+			"  dashboard.orders_service_products osp on (osp.id = pl.id_order_service_product) " +
+			"where " +
+			"  pr.id = ( " +
+			"    select " +
+			"	  max(pr2.id) " +
+			"	from " +
+			"	  dashboard.proceedings pr2 " +
+			"	where " +
+			"	  pr2.id_production_line = pl.id " +
+			"  ) " +
+			"and " + 
+			"  pr.id_sector_failure is not null ";
+		List<ProductionLineOp> list = 
+				(List<ProductionLineOp>) this.em.createNativeQuery(sql, ProductionLineOp.class).getResultList();
+		if(list == null || list.isEmpty()) {
+			return null;
+		} else {
+			return list.get(0);
 		}
+	}
 }

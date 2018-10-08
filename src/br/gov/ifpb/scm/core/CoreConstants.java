@@ -8,8 +8,8 @@ public class CoreConstants {
 	
 	
 	public final static int ORDER_SERVICES_LIMIT = 3;
-	public final static int ORDER_SERVICES_CREATE_SLEEP_MS_MIN = 600000;
-	public final static int ORDER_SERVICES_CREATE_SLEEP_MS_MAX = 1200000;
+	public final static int ORDER_SERVICES_CREATE_SLEEP_MS_MIN = 300000;
+	public final static int ORDER_SERVICES_CREATE_SLEEP_MS_MAX = 500000;
 	public final static int ORDER_SERVICES_OSP_MIN = 1;
 	public final static int ORDER_SERVICES_OSP_MAX = 1;
 	
@@ -22,7 +22,7 @@ public class CoreConstants {
 	public final static int ORDER_SERVICES_PRODUCT_MAX = 10;
 	
 	
-	public final static int SECTOR_CHECK_DEMAND_SLEEP_MS = 2000;
+	public final static int SECTOR_CHECK_DEMAND_SLEEP_MS = 5000;
 	
 	
 	public final static int PROCEEDINGS_STAGE_INIT = 1;

@@ -12,7 +12,7 @@ public abstract class AbstractOperatorThread implements Runnable {
 	}
 	
 	public void out(String msg) {
-		System.out.println("[" + this.getClass().getSimpleName() + "] " + msg);
+		System.out.println("[LOG] #" + this.getClass().getSimpleName() + " " + msg);
 	}
 
 	public DAO getDao() {

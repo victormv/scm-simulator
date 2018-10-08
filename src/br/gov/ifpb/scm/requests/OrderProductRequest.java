@@ -19,12 +19,14 @@ public class OrderProductRequest {
 		ListPlanningIsCurrentDateResponseData data = new ListPlanningIsCurrentDateResponseData();
 
 		ArrayList<Object> al = (ArrayList<Object>) planningOpsCurrentDateResponse.get("data");
-		StringMap<Object> sm = (StringMap<Object>) al.get(0);
-
-		Double d = Double.parseDouble(sm.get("id").toString());
-		data.setIdOp(d.longValue());
-		data.setCodeOp(sm.get("code").toString());
-
+		if(al != null && !al.isEmpty()) {
+			StringMap<Object> sm = (StringMap<Object>) al.get(0);
+			if(sm != null && !sm.isEmpty()) {
+				Double d = Double.parseDouble(sm.get("id").toString());
+				data.setIdOp(d.longValue());
+				data.setCodeOp(sm.get("code").toString());
+			}
+		}
 		return data;
 	}
 

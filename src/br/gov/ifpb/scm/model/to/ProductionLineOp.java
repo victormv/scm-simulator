@@ -1,4 +1,4 @@
-package br.gov.ifpb.scm.model;
+package br.gov.ifpb.scm.model.to;
 
 import java.util.Date;
 
@@ -16,16 +16,17 @@ import javax.persistence.TemporalType;
 @Entity
 @Table(name="production_lines", schema="dashboard")
 @SequenceGenerator(sequenceName="dashboard.seq_production_lines", name = "seq")
-public class ProductionLine	{
+public class ProductionLineOp	{
 	
 	private Long id;
 	private Long idOrderServiceProduct;
+	private Long idOrderService;
 	private Date momentStarted;
 	private Date momentEnded;
 	private Integer idProductionLineStatus;
 	private String sequential;
 	
-	public ProductionLine() {}
+	public ProductionLineOp() {}
 
 	@Id
 	@Column(name="id")
@@ -83,5 +84,14 @@ public class ProductionLine	{
 
 	public void setSequential(String sequential) {
 		this.sequential = sequential;
+	}
+
+	@Column(name="id_order_service")
+	public Long getIdOrderService() {
+		return idOrderService;
+	}
+
+	public void setIdOrderService(Long idOrderService) {
+		this.idOrderService = idOrderService;
 	}
 }
