@@ -9,6 +9,9 @@ import br.gov.ifpb.scm.util.Util;
 
 public class OperatorLeaderThread extends AbstractOperatorThread {
 	
+	/*
+	 * Temporariamente desabilitado pois a function wipe_db() do postgresql ja faz esse papel
+	 */
 	public OperatorLeaderThread() {
 		//Cria um plajenamento semanal responsavel pela semana
 //		Calendar calendario = new GregorianCalendar();
