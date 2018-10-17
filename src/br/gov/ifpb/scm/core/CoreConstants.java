@@ -7,7 +7,7 @@ public class CoreConstants {
 	public final static String URL_API = "http://localhost:3004/api/v1/";
 	
 	
-	public final static int ORDER_SERVICES_LIMIT = 3;
+	public final static int ORDER_SERVICES_LIMIT = 100;
 	public final static int ORDER_SERVICES_CREATE_SLEEP_MS_MIN = 300000;
 	public final static int ORDER_SERVICES_CREATE_SLEEP_MS_MAX = 500000;
 	
