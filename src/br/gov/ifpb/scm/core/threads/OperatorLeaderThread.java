@@ -59,6 +59,6 @@ public class OperatorLeaderThread extends AbstractOperatorThread {
 	
 	
 	public String getCodeOrderService()	{
-		return String.format("%010d", this.dao.getLastIdOrderService());
+		return String.format("%015d", this.dao.getLastIdOrderService());
 	}
 }

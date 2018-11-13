@@ -7,9 +7,9 @@ public class CoreConstants {
 	public final static String URL_API = "http://localhost:3004/api/v1/";
 	
 	
-	public final static int ORDER_SERVICES_LIMIT = 100;
+	public final static int ORDER_SERVICES_LIMIT = 50000;
 	public final static int ORDER_SERVICES_CREATE_SLEEP_MS_MIN = 300000;
-	public final static int ORDER_SERVICES_CREATE_SLEEP_MS_MAX = 500000;
+	public final static int ORDER_SERVICES_CREATE_SLEEP_MS_MAX = 350000;
 	
 	public final static int ORDER_SERVICES_STATUS_OPENNED = 1;
 	public final static int ORDER_SERVICES_STATUS_PRODUCING = 2;
@@ -23,8 +23,8 @@ public class CoreConstants {
 	public final static int SECTOR_CHECK_DEMAND_SLEEP_MS = 5000;
 	
 	
-	public final static int PROCEEDINGS_SLEEP_MS_TASK_MIN = 2500;
-	public final static int PROCEEDINGS_SLEEP_MS_TASK_MAX = 3500;
+	public final static int PROCEEDINGS_SLEEP_MS_TASK_MIN = 5500;
+	public final static int PROCEEDINGS_SLEEP_MS_TASK_MAX = 8500;
 	
 	
 	public final static int PRODUCTION_LINE_STATUS_OPENNED = 1;
@@ -34,7 +34,7 @@ public class CoreConstants {
 	public final static int PRODUCTION_LINE_STATUS_DISCARDED = 5;
 	
 	public final static int PRODUCTION_LINE_REWORK_MAX = 3;
-	public final static int PRODUCTION_LINE_REWORK_PROBABILITY = 35;
+	public final static int PRODUCTION_LINE_REWORK_PROBABILITY = 30;
 	
 	
 	public final static int USER_OPERATION_LEADER_ID = 1;
